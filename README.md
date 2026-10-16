@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scatter Graphs Complete Quiz (Questions 1–15)</title>
+  <style>
+    :root {
+      --primary: #1d4ed8;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #cbd5e1;
+      --text: #0f172a;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 24px;
+    }
+    .container {
+      max-width: 960px;
+      margin: auto;
+      background: var(--card);
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+    h1 {
+      text-align: center;
+      margin: 0 0 8px 0;
+    }
+    .subtitle {
+      text-align: center;
+      color: #475569;
+      margin-bottom: 28px;
+    }
+    .problem-block {
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      margin-bottom: 32px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .problem-header {
+      background: #1e293b;
+      color: #fff;
+      padding: 12px 20px;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .problem-body {
+      padding: 20px;
+    }
+    .context-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 18px;
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .context-text {
+      flex: 1 1 300px;
+      font-size: 0.96rem;
+      line-height: 1.5;
+    }
+    .data-table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 0.88rem;
+      background: #fff;
+    }
+    .data-table th, .data-table td {
+      border: 1px solid #94a3b8;
+      padding: 6px 8px;
+      text-align: center;
+    }
+    .data-table th {
+      background: #e2e8f0;
+      font-weight: 600;
+    }
+    .svg-wrap {
+      flex: 0 0 auto;
+      margin: auto;
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 8px;
+    }
+    .subq-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .subq-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: #fcfcfd;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+    .badge-mcq { background: #dbeafe; color: #1e40af; }
+    .badge-fib { background: #f3e8ff; color: #6b21a8; }
+    .subq-prompt {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .mcq-options label {
+      display: block;
+      padding: 7px 12px;
+      margin: 5px 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.93rem;
+    }
+    .mcq-options label:hover {
+      background: #f1f5f9;
+    }
+    .fib-input {
+      padding: 8px 12px;
+      border: 1px solid #94a3b8;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      width: 240px;
+      max-width: 90%;
+    }
+    .feedback {
+      margin-top: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .correct { color: #15803d; }
+    .incorrect { color: #b91c1c; }
+    .footer-bar {
+      position: sticky;
+      bottom: 16px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(4px);
+      padding: 14px 22px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn {
+      padding: 11px 22px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-secondary { background: #e2e8f0; color: #1e293b; margin-right: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Corbettmaths Scatter Graphs Quiz</h1>
+  <p class="subtitle">All 15 Questions & 39 Sub-Questions Mapped • Alternating MCQ & Fill in the Blank</p>
+
+  <form id="quizForm">
+    <div id="quizContainer"></div>
+
+    <div class="footer-bar">
+      <div id="scoreText" style="font-weight:700; font-size:1.1rem;">Complete the questions and click Submit!</div>
+      <div>
+        <button type="button" class="btn btn-secondary" onclick="resetAll()">Reset</button>
+        <button type="button" class="btn btn-primary" onclick="gradeAll()">Submit & Grade Quiz</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+// Helper to render clean SVG scatter graphs with axes, labels, and points
+function createScatterSVG({ xMin, xMax, xStep, yMin, yMax, yStep, xLabel, yLabel, points, line, width = 300, height = 250 }) {
+  const padL = 48, padR = 18, padT = 16, padB = 38;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+
+  const toX = val => padL + ((val - xMin) / (xMax - xMin)) * plotW;
+  const toY = val => padT + plotH - ((val - yMin) / (yMax - yMin)) * plotH;
+
+  let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">`;
+
+  // Grid & Ticks X
+  for (let x = xMin; x <= xMax + 0.0001; x += xStep) {
+    const cx = toX(x);
+    svg += `<line x1="${cx}" y1="${padT}" x2="${cx}" y2="${padT + plotH}" stroke="#e2e8f0" stroke-width="1"/>`;
+    svg += `<text x="${cx}" y="${padT + plotH + 15}" font-size="10" text-anchor="middle" fill="#334155">${Math.round(x * 100) / 100}</text>`;
+  }
+
+  // Grid & Ticks Y
+  for (let y = yMin; y <= yMax + 0.0001; y += yStep) {
+    const cy = toY(y);
+    svg += `<line x1="${padL}" y1="${cy}" x2="${padL + plotW}" y2="${cy}" stroke="#e2e8f0" stroke-width="1"/>`;
+    svg += `<text x="${padL - 6}" y="${cy + 3}" font-size="10" text-anchor="end" fill="#334155">${Math.round(y * 100) / 100}</text>`;
+  }
+
+  // Axes
+  svg += `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + plotH}" stroke="#0f172a" stroke-width="1.5"/>`;
+  svg += `<line x1="${padL}" y1="${padT + plotH}" x2="${padL + plotW}" y2="${padT + plotH}" stroke="#0f172a" stroke-width="1.5"/>`;
+
+  // Axis Titles
+  svg += `<text x="${padL + plotW / 2}" y="${height - 5}" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e40af">${xLabel}</text>`;
+  svg += `<text x="13" y="${padT + plotH / 2}" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e40af" transform="rotate(-90 13,${padT + plotH / 2})">${yLabel}</text>`;
+
+  // Optional line of best fit (e.g. Question 9)
+  if (line) {
+    svg += `<line x1="${toX(line.x1)}" y1="${toY(line.y1)}" x2="${toX(line.x2)}" y2="${toY(line.y2)}" stroke="#dc2626" stroke-width="1.8"/>`;
+  }
+
+  // Points (drawn as × crosses)
+  points.forEach(([px, py]) => {
+    const cx = toX(px), cy = toY(py);
+    svg += `<path d="M ${cx - 3.5} ${cy - 3.5} L ${cx + 3.5} ${cy + 3.5} M ${cx - 3.5} ${cy + 3.5} L ${cx + 3.5} ${cy - 3.5}" stroke="#1d4ed8" stroke-width="1.8"/>`;
+  });
+
+  svg += `</svg>`;
+  return svg;
+}
+
+const problems = [
+  {
+    num: 1,
+    title: "Question 1: Music Test Mistakes",
+    contextHTML: `
+      <p>Eight students sat a music test. The table shows information about how many hours of lessons they had and the number of mistakes made in the test.</p>
+      <table class="data-table">
+        <tr><th>Hours of lessons</th><td>8</td><td>2</td><td>5</td><td>3</td><td>10</td><td>7</td><td>11</td><td>6</td></tr>
+        <tr><th>Number of mistakes</th><td>8</td><td>12</td><td>7</td><td>9</td><td>2</td><td>6</td><td>1</td><td>5</td></tr>
+      </table>
+    `,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 12, xStep: 2, yMin: 0, yMax: 14, yStep: 2,
+      xLabel: "Hours of Lessons", yLabel: "Number of Mistakes",
+      points: [[8,8],[2,12],[5,7],[3,9],[10,2],[7,6],[11,1],[6,5]]
+    }),
+    subQuestions: [
+      {
+        label: "1(a)",
+        prompt: "Which set of coordinates correctly represents all eight points to be plotted on the scatter graph?",
+        options: [
+          "(8,8), (2,12), (5,7), (3,9), (10,2), (7,6), (11,1), (6,5)",
+          "(8,8), (12,2), (7,5), (9,3), (2,10), (6,7), (1,11), (5,6)",
+          "(8,2), (5,3), (10,7), (11,6), (8,12), (7,9), (2,6), (1,5)",
+          "(2,8), (5,12), (3,7), (10,9), (7,2), (11,6), (6,1), (8,5)"
+        ],
+        answer: "(8,8), (2,12), (5,7), (3,9), (10,2), (7,6), (11,1), (6,5)"
+      },
+      {
+        label: "1(b)",
+        prompt: "A student is awarded a prize if they make less than 3 mistakes. How many students are awarded a prize?",
+        accepted: ["2", "two"],
+        displayAnswer: "2 (the students with 2 and 1 mistakes)"
+      },
+      {
+        label: "1(c)",
+        prompt: "Complete the sentence: 'Generally the more hours of lessons, the _______ mistakes are made.'",
+        options: ["fewer (less)", "more", "same number of", "double"],
+        answer: "fewer (less)"
+      }
+    ]
+  },
+  {
+    num: 2,
+    title: "Question 2: Used Car Garage Values",
+    contextHTML: `<p>The value of cars in a used car garage are recorded on the scatter graph. Another car arrives that is 4 years old and worth £5000.</p>`,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 9, xStep: 1, yMin: 0, yMax: 10000, yStep: 2000,
+      xLabel: "Age (years)", yLabel: "Value (£)",
+      points: [[1,8000],[1.5,9000],[2,7000],[3,7000],[4.5,6000],[5,5000],[7,4000],[7,2000],[8,3000],[9,1000]]
+    }),
+    subQuestions: [
+      {
+        label: "2(a)",
+        prompt: "What coordinates should be plotted to show the car that is 4 years old and worth £5000? (Format: x, y)",
+        accepted: ["(4, 5000)", "4, 5000", "4,5000", "(4,5000)"],
+        displayAnswer: "(4, 5000)"
+      },
+      {
+        label: "2(b)",
+        prompt: "Describe the correlation between the value of the car and the age of the car.",
+        options: ["Negative correlation", "Positive correlation", "No correlation", "Circular correlation"],
+        answer: "Negative correlation"
+      },
+      {
+        label: "2(c)",
+        prompt: "The next car that arrives is 6 years old. Estimate the value of the car in £:",
+        range: [3800, 5000],
+        displayAnswer: "£4400 (accept £3800 – £5000)"
+      }
+    ]
+  },
+  {
+    num: 3,
+    title: "Question 3: Time Spent Revising & Test Scores",
+    contextHTML: `
+      <p>The table shows the time spent revising and the test scores of ten students. The first seven points have been plotted.</p>
+      <table class="data-table">
+        <tr><th>Time (hours)</th><td>9</td><td>0.5</td><td>1</td><td>4</td><td>6</td><td>2</td><td>3</td><td>7</td><td>5</td><td>8</td></tr>
+        <tr><th>Test result (%)</th><td>90</td><td>20</td><td>38</td><td>62</td><td>68</td><td>32</td><td>46</td><td>70</td><td>60</td><td>86</td></tr>
+      </table>
+    `,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 9, xStep: 1, yMin: 0, yMax: 100, yStep: 20,
+      xLabel: "Time spent revising (hours)", yLabel: "Test score (%)",
+      points: [[9,90],[0.5,20],[1,38],[4,62],[6,68],[2,32],[3,46]]
+    }),
+    subQuestions: [
+      {
+        label: "3(a)",
+        prompt: "Which three remaining points need to be plotted to complete the scatter diagram?",
+        options: [
+          "(7, 70), (5, 60), (8, 86)",
+          "(70, 7), (60, 5), (86, 8)",
+          "(7, 68), (5, 62), (8, 90)",
+          "(6, 70), (5, 50), (8, 80)"
+        ],
+        answer: "(7, 70), (5, 60), (8, 86)"
+      },
+      {
+        label: "3(b)",
+        prompt: "Describe the relationship (correlation) shown in the scatter diagram.",
+        accepted: ["positive", "positive correlation", "as time increases score increases"],
+        displayAnswer: "Positive correlation (as revision time increases, test score increases)"
+      },
+      {
+        label: "3(c)",
+        prompt: "Which straight line best represents the line of best fit on the scatter diagram?",
+        options: [
+          "A straight line passing from roughly (0.5, 22) through (4.5, 58) to (9, 92)",
+          "A horizontal line across y = 50%",
+          "A downward sloping line from (0, 90) to (9, 20)",
+          "A zig-zag line connecting every point dot-to-dot"
+        ],
+        answer: "A straight line passing from roughly (0.5, 22) through (4.5, 58) to (9, 92)"
+      },
+      {
+        label: "3(d)",
+        prompt: "Another student has spent 4.5 hours revising. Use the line of best fit to estimate their test result (%):",
+        range: [52, 64],
+        displayAnswer: "58% (accept 52% – 64%)"
+      }
+    ]
+  },
+  {
+    num: 4,
+    title: "Question 4: Heights and Arm Spans",
+    contextHTML: `<p>The scatter graph shows information about the heights and arm spans of ten students in a school.</p>`,
+    svg: createScatterSVG({
+      xMin: 110, xMax: 200, xStep: 10, yMin: 100, yMax: 190, yStep: 10,
+      xLabel: "Height (cm)", yLabel: "Arm Span (cm)",
+      points: [[120,122],[130,128],[138,132],[148,146],[155,156],[162,156],[165,165],[170,170],[178,170],[180,186]]
+    }),
+    subQuestions: [
+      {
+        label: "4(a)",
+        prompt: "What type of correlation does this scatter graph show?",
+        options: ["Positive correlation", "Negative correlation", "No correlation", "Inverse correlation"],
+        answer: "Positive correlation"
+      },
+      {
+        label: "4(b)",
+        prompt: "Another student has a height of 150 cm. Estimate the arm span of this student (in cm):",
+        range: [144, 154],
+        displayAnswer: "148 cm (accept 144 – 154 cm)"
+      }
+    ]
+  },
+  {
+    num: 5,
+    title: "Question 5: Plumber Job Duration & Charge",
+    contextHTML: `
+      <p>The table shows the charge (£) by plumbers for jobs of different duration (hours).</p>
+      <table class="data-table">
+        <tr><th>Job duration (hours)</th><td>1</td><td>2</td><td>3</td><td>3</td><td>5</td><td>6</td><td>6</td></tr>
+        <tr><th>Charge (£)</th><td>60</td><td>80</td><td>104</td><td>116</td><td>128</td><td>140</td><td>160</td></tr>
+      </table>
+    `,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 9, xStep: 1, yMin: 0, yMax: 200, yStep: 20,
+      xLabel: "Job duration (hours)", yLabel: "Charge (£)",
+      points: [[1,60],[2,80],[3,104],[3,116],[5,128],[6,140],[6,160]]
+    }),
+    subQuestions: [
+      {
+        label: "5(a)",
+        prompt: "Which list of coordinates represents the 7 data points plotted on the scatter graph?",
+        options: [
+          "(1,60), (2,80), (3,104), (3,116), (5,128), (6,140), (6,160)",
+          "(60,1), (80,2), (104,3), (116,3), (128,5), (140,6), (160,6)",
+          "(1,60), (2,100), (3,120), (4,140), (5,160), (6,180), (7,200)",
+          "(1,80), (2,104), (3,116), (4,128), (5,140), (6,160), (7,180)"
+        ],
+        answer: "(1,60), (2,80), (3,104), (3,116), (5,128), (6,140), (6,160)"
+      },
+      {
+        label: "5(b)",
+        prompt: "Describe the correlation between job duration and charge.",
+        accepted: ["positive", "positive correlation"],
+        displayAnswer: "Positive correlation"
+      },
+      {
+        label: "5(c)",
+        prompt: "Where should the line of best fit be drawn on this scatter graph?",
+        options: [
+          "A straight line passing near (1, 64) through (4, 120) to (6, 152)",
+          "A line starting at (0, 200) sloping down to (9, 0)",
+          "A vertical line at x = 3.5 hours",
+          "A curve bending down after 5 hours"
+        ],
+        answer: "A straight line passing near (1, 64) through (4, 120) to (6, 152)"
+      },
+      {
+        label: "5(d)",
+        prompt: "Use the line of best fit to estimate the charge (£) for a 4 hour job:",
+        range: [112, 130],
+        displayAnswer: "£120 (accept £112 – £130)"
+      },
+      {
+        label: "5(e)",
+        prompt: "Why may it not be appropriate to use your line of best fit to estimate the charge for a job lasting 12 hours?",
+        options: [
+          "12 hours is outside the range of the data (extrapolation)",
+          "Plumbers only work even-numbered hours",
+          "There is no correlation in the graph",
+          "A 4 hour job is more expensive than a 12 hour job"
+        ],
+        answer: "12 hours is outside the range of the data (extrapolation)"
+      }
+    ]
+  },
+  {
+    num: 6,
+    title: "Question 6: Age and Value of Cars",
+    contextHTML: `<p>The scatter graph shows the age and value of some cars.</p>`,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 12, xStep: 2, yMin: 0, yMax: 24000, yStep: 4000,
+      xLabel: "Age (years)", yLabel: "Value (£)",
+      points: [[1,20000],[2,19600],[3,18000],[3,15000],[4,16000],[5,14000],[6,14000],[6,11200],[7,11600],[9,7400],[10,5000],[11,5200],[12,2000]]
+    }),
+    subQuestions: [
+      {
+        label: "6",
+        prompt: "Using the scatter graph, find an estimate for the value (£) of an 8 year old car:",
+        range: [8000, 10500],
+        displayAnswer: "£9200 (accept £8000 – £10500)"
+      }
+    ]
+  },
+  {
+    num: 7,
+    title: "Question 7: Rugby Players Speed & Strength Tests",
+    contextHTML: `<p>Some rugby players take two tests, one measuring speed and the other measuring strength. Each test is marked out of 200.</p>`,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 200, xStep: 40, yMin: 0, yMax: 200, yStep: 40,
+      xLabel: "Test 1", yLabel: "Test 2",
+      points: [[20,160],[36,144],[40,120],[52,140],[68,108],[80,100],[100,66],[104,80],[112,52],[136,48],[152,32]]
+    }),
+    subQuestions: [
+      {
+        label: "7(a)",
+        prompt: "What type of correlation does this scatter graph show?",
+        options: ["Negative correlation", "Positive correlation", "No correlation", "Non-linear correlation"],
+        answer: "Negative correlation"
+      },
+      {
+        label: "7(b)",
+        prompt: "When drawing a line of best fit on this graph, how should it slope?",
+        accepted: ["down", "downwards", "negative", "top left to bottom right", "from (20,160) to (160,30)"],
+        displayAnswer: "Downwards from top-left (approx 20, 155) to bottom-right (approx 160, 28)"
+      },
+      {
+        label: "7(c)",
+        prompt: "Brian scores 40 in Test 2. Which is the best estimate for his score in Test 1?",
+        options: ["140", "40", "85", "190"],
+        answer: "140"
+      }
+    ]
+  },
+  {
+    num: 8,
+    title: "Question 8: Ages and Masses of Jack Russell Dogs",
+    contextHTML: `
+      <p>Samia records the ages and masses of 10 Jack Russell dogs. The first eight dogs (A–H) have been plotted.</p>
+      <table class="data-table">
+        <tr><th>Dog</th><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td></tr>
+        <tr><th>Age (months)</th><td>4</td><td>10</td><td>12</td><td>5</td><td>8</td><td>10</td><td>2</td><td>9</td><td>6</td><td>8</td></tr>
+        <tr><th>Mass (kg)</th><td>3.2</td><td>4.7</td><td>5.8</td><td>3.6</td><td>4.9</td><td>5.5</td><td>2.1</td><td>5.2</td><td>4.2</td><td>4.4</td></tr>
+      </table>
+    `,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 12, xStep: 2, yMin: 0, yMax: 6, yStep: 1,
+      xLabel: "Age (months)", yLabel: "Mass (kg)",
+      points: [[4,3.2],[10,4.7],[12,5.8],[5,3.6],[8,4.9],[10,5.5],[2,2.1],[9,5.2]]
+    }),
+    subQuestions: [
+      {
+        label: "8(a)",
+        prompt: "What are the coordinates for the remaining two dogs (I and J)?",
+        accepted: ["(6, 4.2) and (8, 4.4)", "6, 4.2 and 8, 4.4", "(6,4.2), (8,4.4)"],
+        displayAnswer: "(6, 4.2) and (8, 4.4)"
+      },
+      {
+        label: "8(b)",
+        prompt: "An owner claims his Jack Russell is 4 months old and weighs 6 kg. Does the scatter graph support his statement?",
+        options: [
+          "No, a 4-month-old Jack Russell should weigh around 3 kg (6 kg is far above the trend)",
+          "Yes, because 4 months and 6 kg lies directly on the line of best fit",
+          "Yes, younger dogs are heavier than older dogs",
+          "No, because 4 months is outside the age range of the graph"
+        ],
+        answer: "No, a 4-month-old Jack Russell should weigh around 3 kg (6 kg is far above the trend)"
+      },
+      {
+        label: "8(c)",
+        prompt: "Explain why the scatter graph should not be used to estimate the mass of an 8 month old Poodle:",
+        accepted: ["different breed", "only for jack russells", "poodle is a different dog", "not a jack russell"],
+        displayAnswer: "The data is only for Jack Russell dogs, and a Poodle is a different breed."
+      }
+    ]
+  },
+  {
+    num: 9,
+    title: "Question 9: Arthur's Line of Best Fit",
+    contextHTML: `<p>A class sits Test 1 and Test 2. Arthur plots a scatter graph and draws the red line of best fit shown.</p>`,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 50, xStep: 10, yMin: 0, yMax: 50, yStep: 10,
+      xLabel: "Test 1 (%)", yLabel: "Test 2 (%)",
+      points: [[10,20],[15,27],[23,23],[25,28],[30,30],[35,28],[37,33],[40,30],[45,35],[50,40],[52,35]],
+      line: { x1: 0, y1: 0, x2: 50, y2: 40 }
+    }),
+    subQuestions: [
+      {
+        label: "9",
+        prompt: "Give a criticism of Arthur's line of best fit.",
+        options: [
+          "He forced it through (0,0); most points are above the line instead of balanced on both sides",
+          "He drew a straight line instead of a curved line",
+          "The gradient of the line should be negative",
+          "A line of best fit must touch every single point"
+        ],
+        answer: "He forced it through (0,0); most points are above the line instead of balanced on both sides"
+      }
+    ]
+  },
+  {
+    num: 10,
+    title: "Question 10: Weekly Rainfall and Umbrellas Sold",
+    contextHTML: `<p>A shop sells umbrellas. The scatter graph shows information about the number of umbrellas sold each week and the rainfall that week, in millimetres.</p>`,
+    svg: createScatterSVG({
+      xMin: 5, xMax: 14, xStep: 1, yMin: 0, yMax: 150, yStep: 30,
+      xLabel: "Rainfall (mm)", yLabel: "Umbrellas sold",
+      points: [[5,27],[5.4,48],[5.8,33],[6.6,60],[7,75],[8,87],[9,66],[9,114],[9.4,108],[10,90],[11,99],[11.4,111],[12,102],[12.8,93]]
+    }),
+    subQuestions: [
+      {
+        label: "10(a)",
+        prompt: "Describe the relationship between the rainfall and umbrellas sold.",
+        accepted: ["positive", "positive correlation", "as rainfall increases umbrellas sold increases"],
+        displayAnswer: "Positive correlation (as rainfall increases, more umbrellas are sold)"
+      },
+      {
+        label: "10(b)",
+        prompt: "What is the most number of umbrellas sold in one week?",
+        options: ["114", "108", "120", "135"],
+        answer: "114"
+      },
+      {
+        label: "10(c)",
+        prompt: "What is the greatest amount of rainfall in one week (in mm)?",
+        range: [12.7, 12.9],
+        displayAnswer: "12.8 mm"
+      },
+      {
+        label: "10(d)",
+        prompt: "In how many weeks did the shop sell over 105 umbrellas?",
+        options: ["3", "2", "4", "5"],
+        answer: "3"
+      },
+      {
+        label: "10(e)",
+        prompt: "In another week, there was 6 mm of rain. Estimate the number of umbrellas sold:",
+        range: [40, 58],
+        displayAnswer: "48 (accept 40 – 58)"
+      },
+      {
+        label: "10(f)",
+        prompt: "Why may it not be appropriate to use your line of best fit to estimate umbrellas sold in a week with 25 mm of rainfall?",
+        options: [
+          "25 mm is outside the range of the data collected (extrapolation)",
+          "It never rains 25 mm in a single week",
+          "There is negative correlation above 14 mm",
+          "Umbrellas cannot be sold when it rains heavily"
+        ],
+        answer: "25 mm is outside the range of the data collected (extrapolation)"
+      }
+    ]
+  },
+  {
+    num: 11,
+    title: "Question 11: Mr Hamill's Plumbing Jobs (Outlier)",
+    contextHTML: `<p>Mr Hamill is a plumber. The scatter graph shows the cost and length of his last 10 jobs.</p>`,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 5, xStep: 1, yMin: 0, yMax: 250, yStep: 50,
+      xLabel: "Length (hours)", yLabel: "Cost, £",
+      points: [[1,50],[1.5,215],[2,75],[2.5,100],[3,125],[3,150],[4,125],[4.5,175],[5,150],[5,200]]
+    }),
+    subQuestions: [
+      {
+        label: "11",
+        prompt: "Identify the coordinates of the outlier on the scatter graph (format: x, y):",
+        accepted: ["(1.5, 215)", "1.5, 215", "(1.5,215)", "1.5,215"],
+        displayAnswer: "(1.5, 215)"
+      }
+    ]
+  },
+  {
+    num: 12,
+    title: "Question 12: Apartment Monthly Rent & Distance",
+    contextHTML: `
+      <p>The table shows information about the monthly rent of an apartment and the distance from a city centre, in miles.</p>
+      <table class="data-table">
+        <tr><th>Distance (miles)</th><td>3.2</td><td>1.5</td><td>5.7</td><td>8.2</td><td>0.7</td><td>0.9</td><td>4.4</td><td>5.8</td><td>9.3</td><td>0.4</td></tr>
+        <tr><th>Monthly rent (£)</th><td>340</td><td>420</td><td>250</td><td>190</td><td>500</td><td>470</td><td>300</td><td>260</td><td>170</td><td>510</td></tr>
+      </table>
+    `,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 10, xStep: 2, yMin: 0, yMax: 600, yStep: 100,
+      xLabel: "Distance (miles)", yLabel: "Monthly rent (£)",
+      points: [[3.2,340],[1.5,420],[5.7,250],[8.2,190],[0.7,500],[0.9,470],[4.4,300],[5.8,260],[9.3,170],[0.4,510]]
+    }),
+    subQuestions: [
+      {
+        label: "12(a)",
+        prompt: "What scales are most appropriate for plotting this data on the axes?",
+        options: [
+          "Horizontal axis (Distance): 0 to 10 miles; Vertical axis (Rent): £0 to £600",
+          "Horizontal axis (Distance): 0 to 100 miles; Vertical axis (Rent): £0 to £50",
+          "Horizontal axis (Distance): 0 to 5 miles; Vertical axis (Rent): £0 to £200",
+          "Horizontal axis (Distance): 0 to 500 miles; Vertical axis (Rent): £0 to £10"
+        ],
+        answer: "Horizontal axis (Distance): 0 to 10 miles; Vertical axis (Rent): £0 to £600"
+      },
+      {
+        label: "12(b)",
+        prompt: "Describe the relationship between the distance from the city centre and the monthly rent.",
+        accepted: ["negative", "negative correlation", "as distance increases rent decreases"],
+        displayAnswer: "Negative correlation (the further from the city centre, the lower the rent)"
+      },
+      {
+        label: "12(c)",
+        prompt: "An apartment is 2.2 miles from the city centre. Which is the best estimate for its monthly rent?",
+        options: ["£390", "£510", "£220", "£150"],
+        answer: "£390"
+      }
+    ]
+  },
+  {
+    num: 13,
+    title: "Question 13: Matching Types & Strengths of Correlation",
+    contextHTML: `<p>Three scatter diagrams are shown on the worksheet:<br>
+      • <strong>Graph 1 (Top):</strong> Points scattered randomly across the grid.<br>
+      • <strong>Graph 2 (Middle):</strong> Points rising steeply and closely together in a line upwards from left to right.<br>
+      • <strong>Graph 3 (Bottom):</strong> Points trending downwards from left to right, but quite spread out.</p>`,
+    svg: "",
+    subQuestions: [
+      {
+        label: "13",
+        prompt: "Write the matching correlations for Graph 1, Graph 2, and Graph 3 separated by commas:",
+        accepted: ["no correlation, strong positive correlation, weak negative correlation", "no, strong positive, weak negative"],
+        displayAnswer: "No correlation, Strong positive correlation, Weak negative correlation"
+      }
+    ]
+  },
+  {
+    num: 14,
+    title: "Question 14: Art, Maths and Biology Exam Scores",
+    contextHTML: `<p>Eleven students sit examinations in Art, Maths and Biology. Both scatter graphs (Maths vs Art and Biology vs Art) show downward trends from top-left to bottom-right.</p>`,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 100, xStep: 20, yMin: 0, yMax: 100, yStep: 20,
+      xLabel: "Art Score", yLabel: "Maths Score",
+      points: [[10,80],[18,72],[20,60],[26,70],[34,54],[40,50],[50,33],[52,40],[56,26],[68,24],[76,16]]
+    }),
+    subQuestions: [
+      {
+        label: "14(a)",
+        prompt: "Describe the correlation between the Maths scores and Art scores.",
+        options: ["Negative correlation", "Positive correlation", "No correlation", "Constant correlation"],
+        answer: "Negative correlation"
+      },
+      {
+        label: "14(b)",
+        prompt: "Describe the correlation between the Biology scores and Art scores.",
+        accepted: ["negative", "negative correlation"],
+        displayAnswer: "Negative correlation"
+      },
+      {
+        label: "14(c)",
+        prompt: "Since students who score high in Art score low in both Maths and Biology (and vice versa), describe the correlation between Biology scores and Maths scores.",
+        options: ["Positive correlation", "Negative correlation", "No correlation", "Zero correlation"],
+        answer: "Positive correlation"
+      }
+    ]
+  },
+  {
+    num: 15,
+    title: "Question 15: Train Passengers & Temperature Ratio Problem",
+    contextHTML: `<p>The scatter graph shows information about the temperature and the number of passengers on 12 train journeys. Jessica was the driver when the temperature was 21°C (where the plotted point shows 380 passengers). On that journey, <strong>adult passengers : child passengers = 13 : 7</strong>.</p>`,
+    svg: createScatterSVG({
+      xMin: 0, xMax: 25, xStep: 5, yMin: 0, yMax: 500, yStep: 100,
+      xLabel: "Temperature, °C", yLabel: "Passengers",
+      points: [[2.5,200],[5,250],[7.5,300],[10,240],[13,280],[15,340],[17.5,280],[18.5,330],[20.5,300],[21,380],[22.5,350],[25,400]]
+    }),
+    subQuestions: [
+      {
+        label: "15",
+        prompt: "Work out how many of the passengers on the 21°C journey were children:",
+        range: [133, 133],
+        displayAnswer: "133 children (Total at 21°C = 380; 380 ÷ 20 = 19; 19 × 7 = 133)"
+      }
+    ]
+  }
+];
+
+let globalIndex = 0;
+const registry = [];
+
+function initQuiz() {
+  const container = document.getElementById("quizContainer");
+
+  problems.forEach(prob => {
+    const block = document.createElement("div");
+    block.className = "problem-block";
+
+    let subqHTML = "";
+    prob.subQuestions.forEach(sq => {
+      // Strictly alternate MCQ and Fill in the Blank
+      const isMCQ = globalIndex % 2 === 0;
+      const qId = `sq_${globalIndex}`;
+
+      registry.push({
+        id: qId,
+        isMCQ,
+        sq
+      });
+
+      let controlHTML = "";
+      if (isMCQ) {
+        controlHTML = `<div class="mcq-options">` + sq.options.map(opt => `
+          <label>
+            <input type="radio" name="${qId}" value="${opt.replace(/"/g, '&quot;')}">
+            ${opt}
+          </label>
+        `).join("") + `</div>`;
+      } else {
+        controlHTML = `<input type="text" class="fib-input" id="${qId}" placeholder="Type your answer..." autocomplete="off">`;
+      }
+
+      subqHTML += `
+        <div class="subq-card">
+          <span class="badge ${isMCQ ? 'badge-mcq' : 'badge-fib'}">
+            ${isMCQ ? 'Multiple Choice' : 'Fill in the Blank'}
+          </span>
+          <div class="subq-prompt">${sq.label}: ${sq.prompt}</div>
+          ${controlHTML}
+          <div class="feedback" id="fb_${qId}"></div>
+        </div>
+      `;
+
+      globalIndex++;
+    });
+
+    block.innerHTML = `
+      <div class="problem-header">${prob.title}</div>
+      <div class="problem-body">
+        <div class="context-box">
+          <div class="context-text">${prob.contextHTML}</div>
+          ${prob.svg ? `<div class="svg-wrap">${prob.svg}</div>` : ''}
+        </div>
+        <div class="subq-list">${subqHTML}</div>
+      </div>
+    `;
+
+    container.appendChild(block);
+  });
+}
+
+function gradeAll() {
+  let score = 0;
+
+  registry.forEach(item => {
+    const fb = document.getElementById(`fb_${item.id}`);
+    const sq = item.sq;
+    let isCorrect = false;
+
+    if (item.isMCQ) {
+      const sel = document.querySelector(`input[name="${item.id}"]:checked`);
+      const val = sel ? sel.value : "";
+      isCorrect = (val === sq.answer);
+      fb.textContent = isCorrect ? "✓ Correct!" : `✗ Answer: ${sq.answer}`;
+    } else {
+      const raw = (document.getElementById(item.id).value || "").trim().toLowerCase();
+      if (sq.range) {
+        const num = parseFloat(raw.replace(/[£%a-z,\s]/g, ""));
+        isCorrect = !isNaN(num) && num >= sq.range[0] && num <= sq.range[1];
+      } else if (sq.accepted) {
+        isCorrect = sq.accepted.some(acc => raw === acc.toLowerCase() || (raw.length >= 4 && raw.includes(acc.toLowerCase())));
+      }
+      fb.textContent = isCorrect ? "✓ Correct!" : `✗ Answer: ${sq.displayAnswer}`;
+    }
+
+    fb.className = "feedback " + (isCorrect ? "correct" : "incorrect");
+    if (isCorrect) score++;
+  });
+
+  const total = registry.length;
+  const pct = Math.round((score / total) * 100);
+  document.getElementById("scoreText").textContent = `Score: ${score} / ${total} (${pct}%)`;
+}
+
+function resetAll() {
+  document.getElementById("quizForm").reset();
+  registry.forEach(item => {
+    const fb = document.getElementById(`fb_${item.id}`);
+    fb.textContent = "";
+    fb.className = "feedback";
+  });
+  document.getElementById("scoreText").textContent = "Complete the questions and click Submit!";
+}
+
+initQuiz();
+</script>
+
+</body>
+</html>
